@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Notificações{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Notificações</h1>
+        <p class="page-subtitle">Acompanhe suas atualizações</p>
+    </div>
+    {% if notifications %}
+    <form method="POST" action="{{ url_for('notifications.read_all') }}">
+        <button type="submit" class="btn btn-ghost btn-sm" id="btn-read-all">
+            <i data-lucide="check-check"></i>
+            Marcar Todas como Lidas
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+{% if notifications %}
+<div class="stagger">
+    {% for notification in notifications %}
+    <div class="notification-item {% if not notification.is_read %}unread{% endif %}" id="notif-{{ notification.id }}">
+        <div class="notification-content">
+            <div class="notification-title">{{ notification.title }}</div>
+            <div class="notification-message">{{ notification.message }}</div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+            <span class="notification-time">{{ notification.time_ago }}</span>
+            {% if not notification.is_read %}
+            <form method="POST" action="{{ url_for('notifications.read', notification_id=notification.id) }}">
+                <button type="submit" class="btn btn-ghost btn-sm" title="Marcar como lida" id="btn-read-{{ notification.id }}">
+                    <i data-lucide="check"></i>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i data-lucide="bell-off"></i>
+    <h3>Nenhuma notificação</h3>
+    <p>Você não possui notificações no momento.</p>
+</div>
+{% endif %}
+{% endblock %}

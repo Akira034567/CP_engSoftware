@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Nova Reserva{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Nova Reserva</h1>
+        <p class="page-subtitle">Selecione o espaço, data e horário desejado</p>
+    </div>
+    <a href="{{ url_for('reservations.my_reservations') }}" class="btn btn-ghost" id="btn-back-reservations">
+        <i data-lucide="arrow-left"></i>
+        Minhas Reservas
+    </a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    {% if spaces %}
+    <form method="POST" action="{{ url_for('reservations.new_reservation') }}" id="reservation-form">
+        <div class="form-group">
+            <label class="form-label" for="space_id">Espaço</label>
+            <select class="form-control" id="space_id" name="space_id" required>
+                <option value="">Selecione um espaço...</option>
+                {% for space in spaces %}
+                <option value="{{ space.id }}">
+                    {{ space.name }} — {{ space.capacity }} {{ 'pessoa' if space.capacity == 1 else 'pessoas' }}
+                    {% if space.location %} ({{ space.location }}){% endif %}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="date">Data</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="start_time">Horário de Início</label>
+                <input type="time" class="form-control" id="start_time" name="start_time" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="end_time">Horário de Fim</label>
+                <input type="time" class="form-control" id="end_time" name="end_time" required>
+            </div>
+        </div>
+
+        <div id="availability-container" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">Horários já reservados neste dia:</h4>
+            <div id="availability-slots" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <!-- Slots populated by JS -->
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="btn-submit-reservation">
+            <i data-lucide="check"></i>
+            Confirmar Reserva
+        </button>
+    </form>
+    {% else %}
+    <div class="empty-state">
+        <i data-lucide="alert-circle"></i>
+        <h3>Nenhum espaço disponível</h3>
+        <p>Não há espaços disponíveis para reserva no momento.</p>
+        <a href="{{ url_for('spaces.index') }}" class="btn btn-ghost">Ver Espaços</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Define data mínima como hoje
+    const dateInput = document.getElementById('date');
+    const spaceInput = document.getElementById('space_id');
+    const availabilityContainer = document.getElementById('availability-container');
+    const availabilitySlots = document.getElementById('availability-slots');
+
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+        dateInput.value = today;
+    }
+
+    async function checkAvailability() {
+        const spaceId = spaceInput.value;
+        const dateVal = dateInput.value;
+        
+        if (!spaceId || !dateVal) {
+            availabilityContainer.style.display = 'none';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/spaces/api/${spaceId}/agenda?date=${dateVal}`);
+            const data = await response.json();
+            
+            availabilityContainer.style.display = 'block';
+            availabilitySlots.innerHTML = '';
+            
+            if (data.length === 0) {
+                availabilitySlots.innerHTML = '<span style="color: var(--success); font-weight: 500;">✓ Nenhum horário reservado (Dia livre)</span>';
+            } else {
+                data.forEach(slot => {
+                    const badge = document.createElement('span');
+                    badge.className = 'status-badge status-occupied';
+                    badge.innerHTML = `<i data-lucide="clock" style="width:12px; height:12px;"></i> ${slot.start} - ${slot.end}`;
+                    availabilitySlots.appendChild(badge);
+                });
+                lucide.createIcons();
+            }
+        } catch (error) {
+            console.error('Error fetching availability:', error);
+        }
+    }
+
+    if (spaceInput && dateInput) {
+        spaceInput.addEventListener('change', checkAvailability);
+        dateInput.addEventListener('change', checkAvailability);
+        // Check initially if values exist
+        if (spaceInput.value) checkAvailability();
+    }
+</script>
+{% endblock %}

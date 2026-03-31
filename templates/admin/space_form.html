@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if space else 'Novo' }} Espaço{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">{{ 'Editar Espaço' if space else 'Novo Espaço' }}</h1>
+        <p class="page-subtitle">{{ 'Altere os dados do espaço' if space else 'Preencha os dados do novo espaço' }}</p>
+    </div>
+    <a href="{{ url_for('admin.manage_spaces') }}" class="btn btn-ghost" id="btn-back-manage">
+        <i data-lucide="arrow-left"></i>
+        Voltar
+    </a>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form method="POST" id="space-form">
+        <div class="form-group">
+            <label class="form-label" for="name">Nome do Espaço *</label>
+            <input type="text" class="form-control" id="name" name="name"
+                   value="{{ space.name if space else '' }}"
+                   placeholder="Ex: Sala de Estudos A" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="description">Descrição</label>
+            <input type="text" class="form-control" id="description" name="description"
+                   value="{{ space.description if space else '' }}"
+                   placeholder="Descrição breve do espaço">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="capacity">Capacidade *</label>
+                <input type="number" class="form-control" id="capacity" name="capacity"
+                       value="{{ space.capacity if space else 1 }}"
+                       min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="location">Localização</label>
+                <input type="text" class="form-control" id="location" name="location"
+                       value="{{ space.location if space else '' }}"
+                       placeholder="Ex: Bloco A, 2º andar">
+            </div>
+        </div>
+
+        {% if space %}
+        <div class="form-group">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-control" id="status" name="status">
+                <option value="available" {% if space.status == 'available' %}selected{% endif %}>Disponível</option>
+                <option value="maintenance" {% if space.status == 'maintenance' %}selected{% endif %}>Em Manutenção</option>
+            </select>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="btn-save-space">
+            <i data-lucide="save"></i>
+            {{ 'Salvar Alterações' if space else 'Criar Espaço' }}
+        </button>
+    </form>
+</div>
+{% endblock %}

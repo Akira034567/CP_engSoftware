@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios de Uso{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Relatórios de Uso</h1>
+        <p class="page-subtitle">Acompanhe as estatísticas do sistema</p>
+    </div>
+</div>
+
+<!-- Estatísticas Gerais -->
+<div class="grid grid-4 stagger mb-3">
+    <div class="card stat-card" id="stat-total">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total de Reservas</div>
+    </div>
+    <div class="card stat-card" id="stat-active">
+        <div class="stat-value">{{ stats.active }}</div>
+        <div class="stat-label">Ativas</div>
+    </div>
+    <div class="card stat-card" id="stat-checkedin">
+        <div class="stat-value">{{ stats.checked_in }}</div>
+        <div class="stat-label">Em Uso</div>
+    </div>
+    <div class="card stat-card" id="stat-completed">
+        <div class="stat-value">{{ stats.completed }}</div>
+        <div class="stat-label">Concluídas</div>
+    </div>
+</div>
+
+<div class="grid grid-3 stagger mb-3">
+    <div class="card stat-card" id="stat-cancelled">
+        <div class="stat-value">{{ stats.cancelled }}</div>
+        <div class="stat-label">Canceladas</div>
+    </div>
+    <div class="card stat-card" id="stat-noshow">
+        <div class="stat-value">{{ stats.no_show }}</div>
+        <div class="stat-label">Não Compareceu</div>
+    </div>
+    <div class="card stat-card" id="stat-users">
+        <div class="stat-value">{{ total_users }}</div>
+        <div class="stat-label">Usuários</div>
+    </div>
+</div>
+
+<!-- Espaços mais Reservados -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i data-lucide="trending-up" style="width: 20px; height: 20px; vertical-align: middle;"></i>
+            Espaços Mais Populares
+        </h3>
+    </div>
+    {% if stats.popular_spaces %}
+    <div class="table-container" style="border: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Espaço</th>
+                    <th>Total de Reservas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for name, total in stats.popular_spaces %}
+                <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td>{{ name }}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="flex: 1; max-width: 200px; height: 8px; border-radius: 4px; background: var(--bg-tertiary); overflow: hidden;">
+                                <div style="height: 100%; width: {{ (total / stats.total * 100) if stats.total > 0 else 0 }}%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 4px; transition: width 1s ease;"></div>
+                            </div>
+                            <span>{{ total }}</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding: 2rem;">
+        <p>Nenhuma reserva registrada ainda.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

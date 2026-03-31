@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Reserva de Espaços de Estudo - Gerencie seus espaços com facilidade">
+    <title>{% block title %}StudySpace{% endblock %} | Reserva de Espaços</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-wrapper">
+        {% if current_user.is_authenticated %}
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-inner">
+                <a href="{{ url_for('spaces.index') }}" class="navbar-brand">
+                    <i data-lucide="book-open"></i>
+                    StudySpace
+                </a>
+
+                <ul class="navbar-nav">
+                    <li>
+                        <a href="{{ url_for('spaces.index') }}" class="nav-link {% if request.endpoint == 'spaces.index' %}active{% endif %}" id="nav-spaces">
+                            <i data-lucide="layout-grid"></i>
+                            <span>Espaços</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('reservations.my_reservations') }}" class="nav-link {% if request.blueprint == 'reservations' %}active{% endif %}" id="nav-reservations">
+                            <i data-lucide="calendar"></i>
+                            <span>Reservas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('notifications.index') }}" class="nav-link {% if request.blueprint == 'notifications' %}active{% endif %}" id="nav-notifications">
+                            <i data-lucide="bell"></i>
+                            <span>Notificações</span>
+                            {% if current_user.unread_notifications_count > 0 %}
+                            <span class="notification-badge" id="notification-count">
+                                {{ current_user.unread_notifications_count if current_user.unread_notifications_count <= 9 else '9+' }}
+                            </span>
+                            {% else %}
+                            <span class="notification-badge" id="notification-count" style="display:none">0</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% if current_user.is_admin %}
+                    <li>
+                        <a href="{{ url_for('admin.manage_spaces') }}" class="nav-link {% if request.blueprint == 'admin' and 'spaces' in request.endpoint %}active{% endif %}" id="nav-admin-spaces">
+                            <i data-lucide="settings"></i>
+                            <span>Gerenciar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.reports') }}" class="nav-link {% if request.endpoint == 'admin.reports' %}active{% endif %}" id="nav-reports">
+                            <i data-lucide="bar-chart-3"></i>
+                            <span>Relatórios</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <a href="{{ url_for('auth.logout') }}" class="nav-link" id="nav-logout">
+                            <i data-lucide="log-out"></i>
+                            <span>Sair</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {% endif %}
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash {{ category }}" id="flash-{{ loop.index }}">
+                {% if category == 'success' %}<i data-lucide="check-circle"></i>
+                {% elif category == 'error' %}<i data-lucide="alert-circle"></i>
+                {% else %}<i data-lucide="info"></i>{% endif %}
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        <main class="main-content fade-in">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>lucide.createIcons();</script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

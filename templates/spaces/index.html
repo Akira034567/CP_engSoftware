@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Espaços Disponíveis{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Espaços de Estudo</h1>
+        <p class="page-subtitle">Visualize a disponibilidade em tempo real</p>
+    </div>
+    <a href="{{ url_for('reservations.new_reservation') }}" class="btn btn-primary" id="btn-new-reservation">
+        <i data-lucide="plus"></i>
+        Nova Reserva
+    </a>
+</div>
+
+{% if spaces %}
+<div class="grid grid-3 stagger" id="spaces-grid">
+    {% for space in spaces %}
+    <div class="card space-card" data-space-id="{{ space.id }}" data-status="{{ 'maintenance' if space.status == 'maintenance' else 'available' }}" id="space-{{ space.id }}">
+        <div class="card-header">
+            <h3 class="card-title">{{ space.name }}</h3>
+            <span class="status-badge {{ 'maintenance' if space.status == 'maintenance' else 'available' }}">
+                {{ 'Manutenção' if space.status == 'maintenance' else 'Disponível' }}
+            </span>
+        </div>
+        <div class="card-body">
+            {% if space.description %}
+            <p class="mb-1">{{ space.description }}</p>
+            {% endif %}
+            <div class="space-meta">
+                <span>
+                    <i data-lucide="users"></i>
+                    {{ space.capacity }} {{ 'pessoa' if space.capacity == 1 else 'pessoas' }}
+                </span>
+                {% if space.location %}
+                <span>
+                    <i data-lucide="map-pin"></i>
+                    {{ space.location }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i data-lucide="layout-grid"></i>
+    <h3>Nenhum espaço cadastrado</h3>
+    <p>Aguarde o administrador adicionar espaços de estudo.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Reservas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Minhas Reservas</h1>
+        <p class="page-subtitle">Gerencie suas reservas e realize check-in</p>
+    </div>
+    <a href="{{ url_for('reservations.new_reservation') }}" class="btn btn-primary" id="btn-new-reservation">
+        <i data-lucide="plus"></i>
+        Nova Reserva
+    </a>
+</div>
+
+<!-- Filtros -->
+<div class="filter-tabs">
+    <a href="{{ url_for('reservations.my_reservations') }}"
+       class="filter-tab {% if not current_filter %}active{% endif %}" id="filter-all">
+        Todas
+    </a>
+    <a href="{{ url_for('reservations.my_reservations', status='active') }}"
+       class="filter-tab {% if current_filter == 'active' %}active{% endif %}" id="filter-active">
+        Ativas
+    </a>
+    <a href="{{ url_for('reservations.my_reservations', status='checked_in') }}"
+       class="filter-tab {% if current_filter == 'checked_in' %}active{% endif %}" id="filter-checkedin">
+        Check-in
+    </a>
+    <a href="{{ url_for('reservations.my_reservations', status='completed') }}"
+       class="filter-tab {% if current_filter == 'completed' %}active{% endif %}" id="filter-completed">
+        Concluídas
+    </a>
+    <a href="{{ url_for('reservations.my_reservations', status='cancelled') }}"
+       class="filter-tab {% if current_filter == 'cancelled' %}active{% endif %}" id="filter-cancelled">
+        Canceladas
+    </a>
+    <a href="{{ url_for('reservations.my_reservations', status='no_show') }}"
+       class="filter-tab {% if current_filter == 'no_show' %}active{% endif %}" id="filter-noshow">
+        Não Compareceu
+    </a>
+</div>
+
+{% if reservations %}
+<div class="grid grid-2 stagger">
+    {% for reservation in reservations %}
+    <div class="card reservation-card" id="reservation-{{ reservation.id }}">
+        <div class="card-header">
+            <h3 class="card-title">{{ reservation.space.name }}</h3>
+            <span class="status-badge {{ reservation.status_color }}">
+                {{ reservation.status_label }}
+            </span>
+        </div>
+
+        <div class="reservation-details">
+            {% if current_user.is_admin %}
+            <div class="reservation-detail">
+                <span class="label">Usuário</span>
+                <span class="value">{{ reservation.user.username }}</span>
+            </div>
+            {% endif %}
+            <div class="reservation-detail">
+                <span class="label">Data</span>
+                <span class="value">{{ reservation.start_time.strftime('%d/%m/%Y') }}</span>
+            </div>
+            <div class="reservation-detail">
+                <span class="label">Horário</span>
+                <span class="value">{{ reservation.start_time.strftime('%H:%M') }} - {{ reservation.end_time.strftime('%H:%M') }}</span>
+            </div>
+            <div class="reservation-detail">
+                <span class="label">Local</span>
+                <span class="value">{{ reservation.space.location or '—' }}</span>
+            </div>
+            {% if reservation.checked_in_at %}
+            <div class="reservation-detail">
+                <span class="label">Check-in em</span>
+                <span class="value">{{ reservation.checked_in_at.strftime('%H:%M') }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if reservation.status == 'active' %}
+        <div class="reservation-actions">
+            <form method="POST" action="{{ url_for('reservations.checkin', reservation_id=reservation.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-accent btn-sm" id="btn-checkin-{{ reservation.id }}">
+                    <i data-lucide="map-pin"></i>
+                    Check-in
+                </button>
+            </form>
+            <form method="POST" action="{{ url_for('reservations.cancel', reservation_id=reservation.id) }}"
+                  onsubmit="return confirmAction('Deseja realmente cancelar esta reserva?')" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm" id="btn-cancel-{{ reservation.id }}">
+                    <i data-lucide="x"></i>
+                    Cancelar
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i data-lucide="calendar"></i>
+    <h3>Nenhuma reserva encontrada</h3>
+    <p>
+        {% if current_filter %}
+            Você não possui reservas com este filtro.
+        {% else %}
+            Você ainda não fez nenhuma reserva.
+        {% endif %}
+    </p>
+    <a href="{{ url_for('reservations.new_reservation') }}" class="btn btn-primary" id="btn-empty-new">
+        <i data-lucide="plus"></i>
+        Fazer uma Reserva
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Espaços{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Gerenciar Espaços</h1>
+        <p class="page-subtitle">Criar, editar e remover espaços de estudo</p>
+    </div>
+    <a href="{{ url_for('admin.new_space') }}" class="btn btn-primary" id="btn-new-space">
+        <i data-lucide="plus"></i>
+        Novo Espaço
+    </a>
+</div>
+
+{% if spaces %}
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Capacidade</th>
+                <th>Local</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for space in spaces %}
+            <tr id="space-row-{{ space.id }}">
+                <td>
+                    <strong>{{ space.name }}</strong>
+                    {% if space.description %}
+                    <br><small style="color: var(--text-muted);">{{ space.description[:60] }}{% if space.description|length > 60 %}...{% endif %}</small>
+                    {% endif %}
+                </td>
+                <td>{{ space.capacity }} {{ 'pessoa' if space.capacity == 1 else 'pessoas' }}</td>
+                <td>{{ space.location or '—' }}</td>
+                <td>
+                    <span class="status-badge {{ 'available' if space.status == 'available' else 'maintenance' }}">
+                        {{ 'Disponível' if space.status == 'available' else 'Manutenção' }}
+                    </span>
+                </td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{{ url_for('admin.edit_space', space_id=space.id) }}" class="btn btn-ghost btn-sm" id="btn-edit-{{ space.id }}">
+                            <i data-lucide="pencil"></i>
+                        </a>
+                        <form method="POST" action="{{ url_for('admin.delete_space', space_id=space.id) }}"
+                              onsubmit="return confirmAction('Deseja realmente remover o espaço &quot;{{ space.name }}&quot;?')" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" id="btn-delete-{{ space.id }}">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <i data-lucide="layout-grid"></i>
+    <h3>Nenhum espaço cadastrado</h3>
+    <p>Clique em "Novo Espaço" para começar.</p>
+</div>
+{% endif %}
+{% endblock %}
