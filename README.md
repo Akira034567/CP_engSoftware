@@ -139,34 +139,27 @@ CP_engSoftware/
 
 ## 📸 Demonstração
 
-### Tela de Login
-![Tela de Login](docs/screenshots/login.png)
+[![Demonstração do Sistema](https://img.youtube.com/vi/KJ6R-ZuvPI0/maxresdefault.jpg)](https://youtu.be/KJ6R-ZuvPI0)
 
-### Espaços Disponíveis
-![Espaços](docs/screenshots/espacos.png)
-
-### Gerenciamento de Espaços (Admin)
-![Admin](docs/screenshots/gerenciar.png)
-
-### Relatórios de Uso (Admin)
-![Relatórios](docs/screenshots/relatorios.png)
+*Clique na imagem ou no link acima para assistir à demonstração.*
 
 ---
 
 ## 👨‍💻 Integrantes do Grupo
 
-| Nome | RM | Turma |
-|------|----|-------|
-|      |    |       |
-|      |    |       |
-|      |    |       |
-|      |    |       |
-|      |    |       |
+|                Nome                |    RM    | Turma |
+|------------------------------------|----------|-------|
+| Davi da Silva Biaggioli            |  552581  |  3ECR |
+| Jean Lucas Loureiro Depieri        |  555797  |  3ECR |
+| João Gabriel De Bortoli Ribeiro    |  554601  |  3ECR |
+| Lucas Akira Watanabe               |  554875  |  3ECR |
+| Luiz Guilherme de Souza Varischi   |  559028  |  3ECR |
+| Pedro Alvarez Certo                |  554603  |  3ECR |
+| Gustavo Demeis Peres               |  555143  |  3ECR |
 
 ---
 
 ## 🔗 Links
 
-- **Repositório GitHub**: [https://github.com/seu-usuario/CP_engSoftware](https://github.com/seu-usuario/CP_engSoftware)
-- **Board (Miro)**: _link do Miro_
-- **Vídeo de Demonstração**: _link do vídeo_
+- **Repositório GitHub**: [https://github.com/Akira034567/CP_engSoftware](https://github.com/Akira034567/CP_engSoftware)
+- **Board (Miro)**: [https://miro.com/welcomeonboard/T0ExRGtOWjR1K0FWNXJxRzFHWDRMNWxmOGJ3M1hlK0dLOTNCZTBUblNQR1hPOWp6OGZCWTVEUlROYVhtWmhrZlZ3MCtzU2dZeEs3VTdTYVdYUXZYeDhnNjNGZDgwRDEyOVdoVXFrYUZIRUtQeGhLZ1NuaXRjSlVuWEkvYllwUW1BS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=777295586836](https://miro.com/welcomeonboard/T0ExRGtOWjR1K0FWNXJxRzFHWDRMNWxmOGJ3M1hlK0dLOTNCZTBUblNQR1hPOWp6OGZCWTVEUlROYVhtWmhrZlZ3MCtzU2dZeEs3VTdTYVdYUXZYeDhnNjNGZDgwRDEyOVdoVXFrYUZIRUtQeGhLZ1NuaXRjSlVuWEkvYllwUW1BS2NFMDFkcUNFSnM0d3FEN050ekl3PT0hdjE=?share_link_id=777295586836)
