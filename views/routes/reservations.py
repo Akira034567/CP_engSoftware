@@ -71,7 +71,12 @@ def new_reservation():
 
     # GET: mostra formulário
     spaces = Space.query.filter_by(status='available').order_by(Space.name).all()
-    return render_template('reservations/create.html', spaces=spaces)
+    preselected_space_id = request.args.get('space_id', type=int)
+    return render_template(
+        'reservations/create.html',
+        spaces=spaces,
+        preselected_space_id=preselected_space_id
+    )
 
 
 @reservations_bp.route('/<int:reservation_id>/cancel', methods=['POST'])

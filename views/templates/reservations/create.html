@@ -22,7 +22,7 @@
             <select class="form-control" id="space_id" name="space_id" required>
                 <option value="">Selecione um espaço...</option>
                 {% for space in spaces %}
-                <option value="{{ space.id }}">
+                <option value="{{ space.id }}" {% if preselected_space_id == space.id %}selected{% endif %}>
                     {{ space.name }} — {{ space.capacity }} {{ 'pessoa' if space.capacity == 1 else 'pessoas' }}
                     {% if space.location %} ({{ space.location }}){% endif %}
                 </option>

@@ -18,7 +18,7 @@ class Config:
     # Banco de dados SQLite (persiste em arquivo)
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL',
-        f'sqlite:///{os.path.join(BASE_DIR, "instance", "reservas.db")}'
+        f'sqlite:///{os.path.join(BASE_DIR, "data", "reservas.db")}'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
